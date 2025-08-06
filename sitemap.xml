@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://xiaocaiziyou.top/about/index.html</loc>
+    
+    <lastmod>2025-08-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://xiaocaiziyou.top/2024/02/08/%E5%BC%80%E5%A7%8B%E7%9A%84%E4%B8%80%E5%A4%A9/</loc>
+    
+    <lastmod>2025-08-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://xiaocaiziyou.top/2024/05/30/%E8%83%B6%E7%89%87/</loc>
+    
+    <lastmod>2025-08-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://xiaocaiziyou.top/2024/02/09/%E8%8A%B1%E5%B8%82/</loc>
+    
+    <lastmod>2025-08-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://xiaocaiziyou.top/</loc>
+    <lastmod>2025-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://xiaocaiziyou.top/tags/%E6%97%A5%E5%B8%B8/</loc>
+    <lastmod>2025-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xiaocaiziyou.top/tags/%E8%83%B6%E7%89%87/</loc>
+    <lastmod>2025-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xiaocaiziyou.top/tags/%E6%91%84%E5%BD%B1/</loc>
+    <lastmod>2025-08-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+</urlset>
