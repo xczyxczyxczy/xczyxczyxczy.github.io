@@ -1,54 +1,63 @@
 /* global Fluid, CONFIG */
 
-window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
+window.requestAnimationFrame =
+  window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame;
 
 Fluid.utils = {
-
-  listenScroll: function(callback) {
+  listenScroll: function (callback) {
     var dbc = new Debouncer(callback);
-    window.addEventListener('scroll', dbc, false);
+    window.addEventListener("scroll", dbc, false);
     dbc.handleEvent();
     return dbc;
   },
 
-  unlistenScroll: function(callback) {
-    window.removeEventListener('scroll', callback);
+  unlistenScroll: function (callback) {
+    window.removeEventListener("scroll", callback);
   },
 
   listenDOMLoaded(callback) {
-    if (document.readyState !== 'loading') {
+    if (document.readyState !== "loading") {
       callback();
     } else {
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener("DOMContentLoaded", function () {
         callback();
       });
     }
   },
 
-  scrollToElement: function(target, offset) {
+  scrollToElement: function (target, offset) {
     var of = jQuery(target).offset();
     if (of) {
-      jQuery('html,body').animate({
+      jQuery("html,body").animate({
         scrollTop: of.top + (offset || 0),
-        easing   : 'swing'
+        easing: "swing",
       });
     }
   },
 
-  elementVisible: function(element, offsetFactor) {
+  elementVisible: function (element, offsetFactor) {
     offsetFactor = offsetFactor && offsetFactor >= 0 ? offsetFactor : 0;
     var rect = element.getBoundingClientRect();
-    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const viewportHeight =
+      window.innerHeight || document.documentElement.clientHeight;
     return (
-      (rect.top >= 0 && rect.top <= viewportHeight * (1 + offsetFactor) + rect.height / 2) ||
-      (rect.bottom >= 0 && rect.bottom <= viewportHeight * (1 + offsetFactor) + rect.height / 2)
+      (rect.top >= 0 &&
+        rect.top <= viewportHeight * (1 + offsetFactor) + rect.height / 2) ||
+      (rect.bottom >= 0 &&
+        rect.bottom <= viewportHeight * (1 + offsetFactor) + rect.height / 2)
     );
   },
 
-  waitElementVisible: function(selectorOrElement, callback, offsetFactor) {
-    var runningOnBrowser = typeof window !== 'undefined';
-    var isBot = (runningOnBrowser && !('onscroll' in window))
-      || (typeof navigator !== 'undefined' && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent));
+  waitElementVisible: function (selectorOrElement, callback, offsetFactor) {
+    var runningOnBrowser = typeof window !== "undefined";
+    var isBot =
+      (runningOnBrowser && !("onscroll" in window)) ||
+      (typeof navigator !== "undefined" &&
+        /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(
+          navigator.userAgent,
+        ));
     if (!runningOnBrowser || isBot) {
       return;
     }
@@ -56,24 +65,30 @@ Fluid.utils = {
     offsetFactor = offsetFactor && offsetFactor >= 0 ? offsetFactor : 0;
 
     function waitInViewport(element) {
-      Fluid.utils.listenDOMLoaded(function() {
+      Fluid.utils.listenDOMLoaded(function () {
         if (Fluid.utils.elementVisible(element, offsetFactor)) {
           callback();
           return;
         }
-        if ('IntersectionObserver' in window) {
-          var io = new IntersectionObserver(function(entries, ob) {
-            if (entries[0].isIntersecting) {
-              callback();
-              ob.disconnect();
-            }
-          }, {
-            threshold : [0],
-            rootMargin: (window.innerHeight || document.documentElement.clientHeight) * offsetFactor + 'px'
-          });
+        if ("IntersectionObserver" in window) {
+          var io = new IntersectionObserver(
+            function (entries, ob) {
+              if (entries[0].isIntersecting) {
+                callback();
+                ob.disconnect();
+              }
+            },
+            {
+              threshold: [0],
+              rootMargin:
+                (window.innerHeight || document.documentElement.clientHeight) *
+                  offsetFactor +
+                "px",
+            },
+          );
           io.observe(element);
         } else {
-          var wrapper = Fluid.utils.listenScroll(function() {
+          var wrapper = Fluid.utils.listenScroll(function () {
             if (Fluid.utils.elementVisible(element, offsetFactor)) {
               Fluid.utils.unlistenScroll(wrapper);
               callback();
@@ -83,8 +98,8 @@ Fluid.utils = {
       });
     }
 
-    if (typeof selectorOrElement === 'string') {
-      this.waitElementLoaded(selectorOrElement, function(element) {
+    if (typeof selectorOrElement === "string") {
+      this.waitElementLoaded(selectorOrElement, function (element) {
         waitInViewport(element);
       });
     } else {
@@ -92,16 +107,20 @@ Fluid.utils = {
     }
   },
 
-  waitElementLoaded: function(selector, callback) {
-    var runningOnBrowser = typeof window !== 'undefined';
-    var isBot = (runningOnBrowser && !('onscroll' in window))
-      || (typeof navigator !== 'undefined' && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent));
+  waitElementLoaded: function (selector, callback) {
+    var runningOnBrowser = typeof window !== "undefined";
+    var isBot =
+      (runningOnBrowser && !("onscroll" in window)) ||
+      (typeof navigator !== "undefined" &&
+        /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(
+          navigator.userAgent,
+        ));
     if (!runningOnBrowser || isBot) {
       return;
     }
 
-    if ('MutationObserver' in window) {
-      var mo = new MutationObserver(function(records, ob) {
+    if ("MutationObserver" in window) {
+      var mo = new MutationObserver(function (records, ob) {
         var ele = document.querySelector(selector);
         if (ele) {
           callback(ele);
@@ -110,8 +129,8 @@ Fluid.utils = {
       });
       mo.observe(document, { childList: true, subtree: true });
     } else {
-      Fluid.utils.listenDOMLoaded(function() {
-        var waitLoop = function() {
+      Fluid.utils.listenDOMLoaded(function () {
+        var waitLoop = function () {
           var ele = document.querySelector(selector);
           if (ele) {
             callback(ele);
@@ -124,17 +143,17 @@ Fluid.utils = {
     }
   },
 
-  createScript: function(url, onload) {
-    var s = document.createElement('script');
-    s.setAttribute('src', url);
-    s.setAttribute('type', 'text/javascript');
-    s.setAttribute('charset', 'UTF-8');
+  createScript: function (url, onload) {
+    var s = document.createElement("script");
+    s.setAttribute("src", url);
+    s.setAttribute("type", "text/javascript");
+    s.setAttribute("charset", "UTF-8");
     s.async = false;
-    if (typeof onload === 'function') {
+    if (typeof onload === "function") {
       if (window.attachEvent) {
-        s.onreadystatechange = function() {
+        s.onreadystatechange = function () {
           var e = s.readyState;
-          if (e === 'loaded' || e === 'complete') {
+          if (e === "loaded" || e === "complete") {
             s.onreadystatechange = null;
             onload();
           }
@@ -143,30 +162,39 @@ Fluid.utils = {
         s.onload = onload;
       }
     }
-    var ss = document.getElementsByTagName('script');
-    var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+    var ss = document.getElementsByTagName("script");
+    var e =
+      ss.length > 0
+        ? ss[ss.length - 1]
+        : document.head || document.documentElement;
     e.parentNode.insertBefore(s, e.nextSibling);
   },
 
-  createCssLink: function(url) {
-    var l = document.createElement('link');
-    l.setAttribute('rel', 'stylesheet');
-    l.setAttribute('type', 'text/css');
-    l.setAttribute('href', url);
-    var e = document.getElementsByTagName('link')[0]
-      || document.getElementsByTagName('head')[0]
-      || document.head || document.documentElement;
+  createCssLink: function (url) {
+    var l = document.createElement("link");
+    l.setAttribute("rel", "stylesheet");
+    l.setAttribute("type", "text/css");
+    l.setAttribute("href", url);
+    var e =
+      document.getElementsByTagName("link")[0] ||
+      document.getElementsByTagName("head")[0] ||
+      document.head ||
+      document.documentElement;
     e.parentNode.insertBefore(l, e);
   },
 
-  loadComments: function(selector, loadFunc) {
-    var ele = document.querySelector('#comments[lazyload]');
+  loadComments: function (selector, loadFunc) {
+    var ele = document.querySelector("#comments[lazyload]");
     if (ele) {
-      var callback = function() {
+      var callback = function () {
         loadFunc();
-        ele.removeAttribute('lazyload');
+        ele.removeAttribute("lazyload");
       };
-      Fluid.utils.waitElementVisible(selector, callback, CONFIG.lazyload.offset_factor);
+      Fluid.utils.waitElementVisible(
+        selector,
+        callback,
+        CONFIG.lazyload.offset_factor,
+      );
     } else {
       loadFunc();
     }
@@ -174,18 +202,22 @@ Fluid.utils = {
 
   getBackgroundLightness(selectorOrElement) {
     var ele = selectorOrElement;
-    if (typeof selectorOrElement === 'string') {
+    if (typeof selectorOrElement === "string") {
       ele = document.querySelector(selectorOrElement);
     }
     var view = ele.ownerDocument.defaultView;
     if (!view) {
       view = window;
     }
-    var rgbArr = view.getComputedStyle(ele).backgroundColor.replace(/rgba*\(/, '').replace(')', '').split(/,\s*/);
+    var rgbArr = view
+      .getComputedStyle(ele)
+      .backgroundColor.replace(/rgba*\(/, "")
+      .replace(")", "")
+      .split(/,\s*/);
     if (rgbArr.length < 3) {
       return 0;
     }
-    var colorCast = (0.213 * rgbArr[0]) + (0.715 * rgbArr[1]) + (0.072 * rgbArr[2]);
+    var colorCast = 0.213 * rgbArr[0] + 0.715 * rgbArr[1] + 0.072 * rgbArr[2];
     return colorCast === 0 || colorCast > 255 / 2 ? 1 : -1;
   },
 
@@ -193,14 +225,13 @@ Fluid.utils = {
     if (times <= 0) {
       return;
     }
-    var next = function() {
+    var next = function () {
       if (--times >= 0 && !handler()) {
         setTimeout(next, interval);
       }
     };
     setTimeout(next, interval);
-  }
-
+  },
 };
 
 /**
@@ -220,7 +251,7 @@ Debouncer.prototype = {
    * dispatches the event to the supplied callback
    * @private
    */
-  update: function() {
+  update: function () {
     this.callback && this.callback();
     this.ticking = false;
   },
@@ -229,9 +260,11 @@ Debouncer.prototype = {
    * ensures events don't get stacked
    * @private
    */
-  requestTick: function() {
+  requestTick: function () {
     if (!this.ticking) {
-      requestAnimationFrame(this.rafCallback || (this.rafCallback = this.update.bind(this)));
+      requestAnimationFrame(
+        this.rafCallback || (this.rafCallback = this.update.bind(this)),
+      );
       this.ticking = true;
     }
   },
@@ -239,7 +272,7 @@ Debouncer.prototype = {
   /**
    * Attach this as the event listeners
    */
-  handleEvent: function() {
+  handleEvent: function () {
     this.requestTick();
-  }
+  },
 };
